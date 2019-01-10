@@ -3432,6 +3432,8 @@ MemberList::MemberMap MagicType::nativeMembers(ContractDefinition const*) const
 			return {};
 	}
 	}
+	solAssert(false, "");
+	return {};
 }
 
 string MagicType::toString(bool _short) const
@@ -3450,4 +3452,13 @@ string MagicType::toString(bool _short) const
 		solAssert(m_typeArgument, "");
 		return "type(" + m_typeArgument->toString(_short) + ")";
 	}
+	solAssert(false, "");
+	return "";
+}
+
+TypePointer MagicType::typeArgument() const
+{
+	solAssert(m_kind == Kind::TypeMeta, "");
+	solAssert(m_typeArgument, "");
+	return m_typeArgument;
 }
