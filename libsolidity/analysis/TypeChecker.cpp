@@ -2102,7 +2102,17 @@ bool TypeChecker::visit(MemberAccess const& _memberAccess)
 			annotation.isPure = true;
 		else if (magicType->kind() == MagicType::Kind::TypeMeta)
 			if (memberName == "creationCode" || memberName == "runtimeCode")
+			{
 				annotation.isPure = true;
+				m_scope->annotation().contractDependencies.insert(
+					&dynamic_cast<ContractType const&>(*magicType->typeArgument()).contractDefinition()
+				);
+				if (contractDependenciesAreCyclic(*m_scope))
+					m_errorReporter.typeError(
+						_memberAccess.location(),
+						"Circular reference for contract code access."
+					);
+			}
 	}
 
 	return false;
