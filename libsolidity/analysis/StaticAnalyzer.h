@@ -38,6 +38,8 @@ namespace dev
 namespace solidity
 {
 
+class ConstructorUsesAssembly;
+
 
 /**
  * The module that performs static analysis on the AST.
@@ -84,6 +86,10 @@ private:
 	/// Pairs of AST ids and pointers are used as keys to ensure a deterministic order
 	/// when traversing.
 	std::map<std::pair<size_t, VariableDeclaration const*>, int> m_localVarUseCount;
+
+	/// Cache that holds information about whether a contract's constructor
+	/// uses inline assembly.
+	std::shared_ptr<ConstructorUsesAssembly> m_constructorUsesAssembly;
 
 	FunctionDefinition const* m_currentFunction = nullptr;
 
