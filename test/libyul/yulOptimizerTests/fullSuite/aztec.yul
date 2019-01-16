@@ -264,10 +264,10 @@
 //     }
 //     {
 //         let validateJo__34 := 0x20
-//         let validateJo__373 := add(validateJo__10, mul(validateJo_i, 0xc0))
-//         let validateJo_noteIndex := add(validateJo__373, 0x24)
+//         let validateJo__351 := add(validateJo__10, mul(validateJo_i, 0xc0))
+//         let validateJo_noteIndex := add(validateJo__351, 0x24)
 //         let validateJo_k := validateJo_i_290
-//         let validateJo_a_292 := calldataload(add(validateJo__373, 0x44))
+//         let validateJo_a_292 := calldataload(add(validateJo__351, 0x44))
 //         let validateJo_a := validateJo_a_292
 //         let validateJo_c := validateJo_challenge
 //         let validateJo__39 := add(validateJo_i, 0x01)
@@ -296,8 +296,8 @@
 //             validateJo_kn := addmod(validateJo_kn, validateJo_k, validateJo_gen_order)
 //         }
 //         let validateJo__52 := 0x40
-//         calldatacopy(0xe0, add(validateJo__373, 164), validateJo__52)
-//         calldatacopy(validateJo__34, add(validateJo__373, 100), validateJo__52)
+//         calldatacopy(0xe0, add(validateJo__351, 164), validateJo__52)
+//         calldatacopy(validateJo__34, add(validateJo__351, 100), validateJo__52)
 //         let validateJo__61 := 0x120
 //         mstore(validateJo__61, sub(validateJo_gen_order, validateJo_c))
 //         let validateJo__62 := 0x60
