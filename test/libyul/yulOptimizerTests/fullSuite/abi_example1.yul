@@ -613,7 +613,7 @@
 //     {
 //         if gt(length_90, 0xffffffffffffffff)
 //         {
-//             revert(size_91, size_91)
+//             revert(0, 0)
 //         }
 //         size_91 := add(mul(length_90, 0x20), 0x20)
 //     }
@@ -621,7 +621,7 @@
 //     {
 //         if gt(length_94, 0xffffffffffffffff)
 //         {
-//             revert(size_95, size_95)
+//             revert(0, 0)
 //         }
 //         size_95 := mul(length_94, 0x20)
 //     }

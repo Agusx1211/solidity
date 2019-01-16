@@ -128,13 +128,14 @@ void OptimiserSuite::run(
 	UnusedPruner::runUntilStabilised(_dialect, ast);
 	ExpressionJoiner::run(ast);
 	UnusedPruner::runUntilStabilised(_dialect, ast);
-	ExpressionJoiner::run(ast);
-	Rematerialiser::run(_dialect, ast);
-	UnusedPruner::runUntilStabilised(_dialect, ast);
 
 	SSAReverser{}(ast);
 	CommonSubexpressionEliminator{_dialect}(ast);
 	UnusedPruner::runUntilStabilised(_dialect, ast, reservedIdentifiers);
+
+	ExpressionJoiner::run(ast);
+	Rematerialiser::run(_dialect, ast);
+	UnusedPruner::runUntilStabilised(_dialect, ast);
 
 	_ast = std::move(ast);
 }
