@@ -41,6 +41,8 @@ namespace yul
  * 	After that the CSE can replace references of a_1 by references to a,
  * 	after which the unused pruner can remove the declaration of a_1.
  *
+ * 	Prerequisites: None
+ *
  */
 class SSAReverser: public ASTModifier
 {

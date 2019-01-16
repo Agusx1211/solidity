@@ -29,6 +29,13 @@ void SSAReverser::operator()(Block& _block)
 		_block.statements,
 		[&](Statement& _stmt1, Statement& _stmt2) -> boost::optional<vector<Statement>>
 		{
+			// Replaces
+			//   let a_1 := E
+			//   a := a_1
+			// with
+			//   a := E
+			//   let a_1 := a
+
 			auto const* varDecl = boost::get<VariableDeclaration>(&_stmt1);
 			auto const* assignment = boost::get<Assignment>(&_stmt2);
 
