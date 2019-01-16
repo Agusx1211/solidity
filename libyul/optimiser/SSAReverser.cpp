@@ -25,7 +25,7 @@ using namespace yul;
 void SSAReverser::operator()(Block& _block)
 {
 	walkVector(_block.statements);
-	iterateReplacingMulti<2>(
+	iterateReplacingWindow<2>(
 		_block.statements,
 		[&](Statement& _stmt1, Statement& _stmt2) -> boost::optional<vector<Statement>>
 		{
