@@ -518,15 +518,14 @@
 //     {
 //         if iszero(slt(add(offset_3, 0x1f), end_4))
 //         {
-//             revert(0, 0)
+//             revert(array_5, array_5)
 //         }
 //         let length_6 := calldataload(offset_3)
-//         let array_5_115 := allocateMemory(array_allocation_size_t_array$_t_address_$dyn_memory(length_6))
-//         array_5 := array_5_115
-//         let dst_7 := array_5_115
-//         mstore(array_5_115, length_6)
+//         array_5 := allocateMemory(array_allocation_size_t_array$_t_address_$dyn_memory(length_6))
+//         let dst_7 := array_5
+//         mstore(array_5, length_6)
 //         let _16 := 0x20
-//         dst_7 := add(array_5_115, _16)
+//         dst_7 := add(array_5, _16)
 //         let src_8 := add(offset_3, _16)
 //         if gt(add(add(offset_3, mul(length_6, 0x40)), _16), end_4)
 //         {
@@ -574,15 +573,14 @@
 //     {
 //         if iszero(slt(add(offset_27, 0x1f), end_28))
 //         {
-//             revert(0, 0)
+//             revert(array_29, array_29)
 //         }
 //         let length_30 := calldataload(offset_27)
-//         let array_29_131 := allocateMemory(array_allocation_size_t_array$_t_address_$dyn_memory(length_30))
-//         array_29 := array_29_131
-//         let dst_31 := array_29_131
-//         mstore(array_29_131, length_30)
+//         array_29 := allocateMemory(array_allocation_size_t_array$_t_address_$dyn_memory(length_30))
+//         let dst_31 := array_29
+//         mstore(array_29, length_30)
 //         let _52 := 0x20
-//         dst_31 := add(array_29_131, _52)
+//         dst_31 := add(array_29, _52)
 //         let src_32 := add(offset_27, _52)
 //         if gt(add(add(offset_27, mul(length_30, _52)), _52), end_28)
 //         {
@@ -603,10 +601,9 @@
 //     }
 //     function allocateMemory(size) -> memPtr
 //     {
-//         let memPtr_157 := mload(64)
-//         memPtr := memPtr_157
-//         let newFreePtr := add(memPtr_157, size)
-//         if or(gt(newFreePtr, 0xffffffffffffffff), lt(newFreePtr, memPtr_157))
+//         memPtr := mload(64)
+//         let newFreePtr := add(memPtr, size)
+//         if or(gt(newFreePtr, 0xffffffffffffffff), lt(newFreePtr, memPtr))
 //         {
 //             revert(0, 0)
 //         }
@@ -616,7 +613,7 @@
 //     {
 //         if gt(length_90, 0xffffffffffffffff)
 //         {
-//             revert(0, 0)
+//             revert(size_91, size_91)
 //         }
 //         size_91 := add(mul(length_90, 0x20), 0x20)
 //     }
@@ -624,7 +621,7 @@
 //     {
 //         if gt(length_94, 0xffffffffffffffff)
 //         {
-//             revert(0, 0)
+//             revert(size_95, size_95)
 //         }
 //         size_95 := mul(length_94, 0x20)
 //     }

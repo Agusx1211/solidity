@@ -263,6 +263,51 @@ void iterateReplacing(std::vector<T>& _vector, const F& _f)
 		_vector = std::move(modifiedVector);
 }
 
+
+namespace detail
+{
+template <typename T, typename F, std::size_t... I>
+void iterateReplacingMulti(std::vector<T>& _vector, F const& _f, std::index_sequence<I...>)
+{
+	// Concept: _f must be Callable, must accept sizeof...(I) parameters of type T&, must return optional<vector<T>>
+	bool useModified = false;
+	std::vector<T> modifiedVector;
+	size_t i = 0;
+	for (; i + sizeof...(I) <= _vector.size(); ++i)
+	{
+		if (boost::optional<std::vector<T>> r = _f(_vector[i + I]...))
+		{
+			if (!useModified)
+			{
+				std::move(_vector.begin(), _vector.begin() + i, back_inserter(modifiedVector));
+				useModified = true;
+			}
+			modifiedVector += std::move(*r);
+			i += sizeof...(I) - 1;
+		}
+		else if (useModified)
+			modifiedVector.emplace_back(std::move(_vector[i]));
+	}
+	if (useModified)
+	{
+		for (; i < _vector.size(); ++i)
+			modifiedVector.emplace_back(std::move(_vector[i]));
+		_vector = std::move(modifiedVector);
+	}
+}
+
+}
+
+/// Function that iterates over a vector, calling a function on every sequence of
+/// @tparam N of its elements. For further details see the single element version
+/// ``iterateReplacing``.
+template <std::size_t N, typename T, typename F>
+void iterateReplacingMulti(std::vector<T>& _vector, F const& _f)
+{
+	// Concept: _f must be Callable, must accept N parameters of type T&, must return optional<vector<T>>
+	detail::iterateReplacingMulti(_vector, _f, std::make_index_sequence<N>{});
+}
+
 /// @returns true iff @a _str passess the hex address checksum test.
 /// @param _strict if false, hex strings with only uppercase or only lowercase letters
 /// are considered valid.

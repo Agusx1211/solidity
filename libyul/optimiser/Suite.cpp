@@ -35,6 +35,7 @@
 #include <libyul/optimiser/UnusedPruner.h>
 #include <libyul/optimiser/ExpressionSimplifier.h>
 #include <libyul/optimiser/CommonSubexpressionEliminator.h>
+#include <libyul/optimiser/SSAReverser.h>
 #include <libyul/optimiser/SSATransform.h>
 #include <libyul/optimiser/StructuralSimplifier.h>
 #include <libyul/optimiser/RedundantAssignEliminator.h>
@@ -130,6 +131,10 @@ void OptimiserSuite::run(
 	ExpressionJoiner::run(ast);
 	Rematerialiser::run(_dialect, ast);
 	UnusedPruner::runUntilStabilised(_dialect, ast);
+
+	SSAReverser{}(ast);
+	CommonSubexpressionEliminator{_dialect}(ast);
+	UnusedPruner::runUntilStabilised(_dialect, ast, reservedIdentifiers);
 
 	_ast = std::move(ast);
 }
