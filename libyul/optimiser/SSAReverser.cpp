@@ -29,26 +29,35 @@ void SSAReverser::operator()(Block& _block)
 		_block.statements,
 		[&](Statement& _stmt1, Statement& _stmt2) -> boost::optional<vector<Statement>>
 		{
-			if (auto const* varDecl = boost::get<VariableDeclaration>(&_stmt1))
-				if (varDecl->variables.size() == 1 && varDecl->value)
-					if (auto const *assignment = boost::get<Assignment>(&_stmt2))
-						if (assignment->variableNames.size() == 1)
-							if (auto const* identifier = boost::get<Identifier>(assignment->value.get()))
-								if (identifier->name == varDecl->variables.front().name)
-									return {
-										{
-											Assignment{
-												std::move(assignment->location),
-												assignment->variableNames,
-												std::move(varDecl->value)
-											},
-											VariableDeclaration{
-												std::move(varDecl->location),
-												std::move(varDecl->variables),
-												std::make_shared<Expression>(assignment->variableNames.front())
-											}
-										}
-									};
+			auto const* varDecl = boost::get<VariableDeclaration>(&_stmt1);
+			auto const* assignment = boost::get<Assignment>(&_stmt2);
+
+			if (!varDecl || !assignment)
+				return {};
+
+			auto const* identifier = boost::get<Identifier>(assignment->value.get());
+
+			if (
+				varDecl->variables.size() == 1 &&
+				varDecl->value &&
+				assignment->variableNames.size() == 1 &&
+				identifier &&
+				identifier->name == varDecl->variables.front().name
+			)
+				return {
+					{
+						Assignment{
+							std::move(assignment->location),
+							assignment->variableNames,
+							std::move(varDecl->value)
+						},
+						VariableDeclaration{
+							std::move(varDecl->location),
+							std::move(varDecl->variables),
+							std::make_shared<Expression>(assignment->variableNames.front())
+						}
+					}
+				};
 			return {};
 		}
 	);
