@@ -36,13 +36,13 @@ void SSAReverser::operator()(Block& _block)
 			//   a := E
 			//   let a_1 := a
 
-			auto const* varDecl = boost::get<VariableDeclaration>(&_stmt1);
-			auto const* assignment = boost::get<Assignment>(&_stmt2);
+			auto* varDecl = boost::get<VariableDeclaration>(&_stmt1);
+			auto* assignment = boost::get<Assignment>(&_stmt2);
 
 			if (!varDecl || !assignment)
 				return {};
 
-			auto const* identifier = boost::get<Identifier>(assignment->value.get());
+			auto* identifier = boost::get<Identifier>(assignment->value.get());
 
 			if (
 				varDecl->variables.size() == 1 &&
@@ -51,20 +51,20 @@ void SSAReverser::operator()(Block& _block)
 				identifier &&
 				identifier->name == varDecl->variables.front().name
 			)
-				return {
-					{
-						Assignment{
-							std::move(assignment->location),
-							assignment->variableNames,
-							std::move(varDecl->value)
-						},
-						VariableDeclaration{
+			{
+				vector<Statement> result;
+				result.emplace_back(Assignment{
+					std::move(assignment->location),
+					assignment->variableNames,
+					std::move(varDecl->value)
+				});
+				result.emplace_back(VariableDeclaration{
 							std::move(varDecl->location),
 							std::move(varDecl->variables),
-							std::make_shared<Expression>(assignment->variableNames.front())
-						}
-					}
-				};
+							std::make_unique<Expression>(std::move(assignment->variableNames.front()))
+				});
+				return { std::move(result) };
+			}
 			return {};
 		}
 	);
