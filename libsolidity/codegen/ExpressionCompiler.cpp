@@ -1093,7 +1093,7 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 		case FunctionType::Kind::GasLeft:
 			m_context << Instruction::GAS;
 			break;
-		case FunctionType::Kind::TypeMeta:
+		case FunctionType::Kind::MetaType:
 			// No code to generate.
 			break;
 		}

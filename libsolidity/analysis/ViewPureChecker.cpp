@@ -339,8 +339,8 @@ void ViewPureChecker::endVisit(MemberAccess const& _memberAccess)
 			{MagicType::Kind::Block, "blockhash"},
 			{MagicType::Kind::Message, "data"},
 			{MagicType::Kind::Message, "sig"},
-			{MagicType::Kind::TypeMeta, "creationCode"},
-			{MagicType::Kind::TypeMeta, "runtimeCode"}
+			{MagicType::Kind::MetaType, "creationCode"},
+			{MagicType::Kind::MetaType, "runtimeCode"}
 		};
 		set<MagicMember> static const payableMembers{
 			{MagicType::Kind::Message, "value"}

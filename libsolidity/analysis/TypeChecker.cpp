@@ -199,7 +199,7 @@ TypePointers TypeChecker::typeCheckABIDecodeAndRetrieveReturnType(FunctionCall c
 	return components;
 }
 
-TypePointers TypeChecker::typeCheckTypeMetaFunctionAndRetrieveReturnType(FunctionCall const& _functionCall)
+TypePointers TypeChecker::typeCheckMetaTypeFunctionAndRetrieveReturnType(FunctionCall const& _functionCall)
 {
 	vector<ASTPointer<Expression const>> arguments = _functionCall.arguments();
 	if (arguments.size() != 1)
@@ -1854,8 +1854,8 @@ bool TypeChecker::visit(FunctionCall const& _functionCall)
 			returnTypes = functionType->returnParameterTypes();
 			break;
 		}
-		case FunctionType::Kind::TypeMeta:
-			returnTypes = typeCheckTypeMetaFunctionAndRetrieveReturnType(_functionCall);
+		case FunctionType::Kind::MetaType:
+			returnTypes = typeCheckMetaTypeFunctionAndRetrieveReturnType(_functionCall);
 			break;
 		default:
 		{
@@ -2100,19 +2100,20 @@ bool TypeChecker::visit(MemberAccess const& _memberAccess)
 	{
 		if (magicType->kind() == MagicType::Kind::ABI)
 			annotation.isPure = true;
-		else if (magicType->kind() == MagicType::Kind::TypeMeta)
-			if (memberName == "creationCode" || memberName == "runtimeCode")
-			{
-				annotation.isPure = true;
-				m_scope->annotation().contractDependencies.insert(
-					&dynamic_cast<ContractType const&>(*magicType->typeArgument()).contractDefinition()
+		else if (magicType->kind() == MagicType::Kind::MetaType && (
+			memberName == "creationCode" || memberName == "runtimeCode"
+		))
+		{
+			annotation.isPure = true;
+			m_scope->annotation().contractDependencies.insert(
+				&dynamic_cast<ContractType const&>(*magicType->typeArgument()).contractDefinition()
+			);
+			if (contractDependenciesAreCyclic(*m_scope))
+				m_errorReporter.typeError(
+					_memberAccess.location(),
+					"Circular reference for contract code access."
 				);
-				if (contractDependenciesAreCyclic(*m_scope))
-					m_errorReporter.typeError(
-						_memberAccess.location(),
-						"Circular reference for contract code access."
-					);
-			}
+		}
 	}
 
 	return false;

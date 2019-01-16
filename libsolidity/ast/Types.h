@@ -989,7 +989,7 @@ public:
 		ABIEncodeWithSignature,
 		ABIDecode,
 		GasLeft, ///< gasleft()
-		TypeMeta ///< type(...)
+		MetaType ///< type(...)
 	};
 
 	Category category() const override { return Category::Function; }
@@ -1310,7 +1310,7 @@ public:
 		Message, ///< "msg"
 		Transaction, ///< "tx"
 		ABI, ///< "abi"
-		TypeMeta ///< "type(...)"
+		MetaType ///< "type(...)"
 	};
 	Category category() const override { return Category::Magic; }
 

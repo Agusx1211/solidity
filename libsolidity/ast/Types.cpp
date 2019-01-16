@@ -2626,7 +2626,7 @@ string FunctionType::richIdentifier() const
 	case Kind::ABIEncodeWithSelector: id += "abiencodewithselector"; break;
 	case Kind::ABIEncodeWithSignature: id += "abiencodewithsignature"; break;
 	case Kind::ABIDecode: id += "abidecode"; break;
-	case Kind::TypeMeta: id += "metaType"; break;
+	case Kind::MetaType: id += "metaType"; break;
 	}
 	id += "_" + stateMutabilityToString(m_stateMutability);
 	id += identifierList(m_parameterTypes) + "returns" + identifierList(m_returnParameterTypes);
@@ -3039,7 +3039,7 @@ bool FunctionType::isPure() const
 		m_kind == Kind::ABIEncodeWithSelector ||
 		m_kind == Kind::ABIEncodeWithSignature ||
 		m_kind == Kind::ABIDecode ||
-		m_kind == Kind::TypeMeta;
+		m_kind == Kind::MetaType;
 }
 
 TypePointers FunctionType::parseElementaryTypeVector(strings const& _types)
@@ -3310,7 +3310,7 @@ string ModuleType::toString(bool) const
 shared_ptr<MagicType> MagicType::metaType(TypePointer _type)
 {
 	solAssert(_type && _type->category() == Type::Category::Contract, "Only contracts supported for now.");
-	auto t = make_shared<MagicType>(Kind::TypeMeta);
+	auto t = make_shared<MagicType>(Kind::MetaType);
 	t->m_typeArgument = std::move(_type);
 	return t;
 }
@@ -3327,7 +3327,7 @@ string MagicType::richIdentifier() const
 		return "t_magic_transaction";
 	case Kind::ABI:
 		return "t_magic_abi";
-	case Kind::TypeMeta:
+	case Kind::MetaType:
 		solAssert(m_typeArgument, "");
 		return "t_magic_metaType_" + m_typeArgument->richIdentifier();
 	}
@@ -3416,14 +3416,14 @@ MemberList::MemberMap MagicType::nativeMembers(ContractDefinition const*) const
 				StateMutability::Pure
 			)}
 		});
-	case Kind::TypeMeta:
+	case Kind::MetaType:
 	{
 		solAssert(
 			m_typeArgument && m_typeArgument->category() == Type::Category::Contract,
 			"Only contracts supported for now"
 		);
 		ContractDefinition const& contract = dynamic_cast<ContractType const&>(*m_typeArgument).contractDefinition();
-		if (contract.annotation().unimplementedFunctions.empty() && contract.constructorIsPublic())
+		if (contract.canBeDeployed())
 			return MemberList::MemberMap({
 				{"creationCode", std::make_shared<ArrayType>(DataLocation::Memory)},
 				{"runtimeCode", std::make_shared<ArrayType>(DataLocation::Memory)}
@@ -3448,17 +3448,17 @@ string MagicType::toString(bool _short) const
 		return "tx";
 	case Kind::ABI:
 		return "abi";
-	case Kind::TypeMeta:
+	case Kind::MetaType:
 		solAssert(m_typeArgument, "");
 		return "type(" + m_typeArgument->toString(_short) + ")";
 	}
-	solAssert(false, "");
+	solAssert(false, "Unknown kind of magic.");
 	return "";
 }
 
 TypePointer MagicType::typeArgument() const
 {
-	solAssert(m_kind == Kind::TypeMeta, "");
+	solAssert(m_kind == Kind::MetaType, "");
 	solAssert(m_typeArgument, "");
 	return m_typeArgument;
 }

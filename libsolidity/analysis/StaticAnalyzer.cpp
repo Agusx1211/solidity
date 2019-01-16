@@ -193,7 +193,7 @@ bool StaticAnalyzer::visit(MemberAccess const& _memberAccess)
 				_memberAccess.location(),
 				"\"block.blockhash()\" has been deprecated in favor of \"blockhash()\""
 			);
-		else if (type->kind() == MagicType::Kind::TypeMeta && _memberAccess.memberName() == "runtimeCode")
+		else if (type->kind() == MagicType::Kind::MetaType && _memberAccess.memberName() == "runtimeCode")
 		{
 			if (!m_constructorUsesAssembly)
 				m_constructorUsesAssembly = make_shared<ConstructorUsesAssembly>();
