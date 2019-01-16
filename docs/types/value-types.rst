@@ -453,6 +453,13 @@ String literals are written with either double or single-quotes (``"foo"`` or ``
 
 For example, with ``bytes32 samevar = "stringliteral"`` the string literal is interpreted in its raw byte form when assigned to a ``bytes32`` type.
 
+.. note::
+
+  While Solidity does not have string manipulation functions, you can use
+  this implicit conversion for equivalent functionality. For example to compare
+  two strings ``keccak256(abi.encode(s1)) == keccak256(abi.encode(s2))``, or to
+  concatenate two strings already encoded with ``abi.encodePacked(a, b);``.
+
 String literals support the following escape characters:
 
  - ``\<newline>`` (escapes an actual newline)
